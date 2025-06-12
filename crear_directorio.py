@@ -6,8 +6,14 @@ s3_client = boto3.client('s3')
 
 def lambda_handler(event, context):
     """Lambda para crear un 'directorio' (objeto con sufijo '/') en un bucket S3."""
+
     try:
-        body = json.loads(event.get('body', '{}'))
+        if 'body' in event:
+            body = event['body']
+            if isinstance(body, str):
+                body = json.loads(body)
+        else:
+            body = event
     except Exception as e:
         return {
             'statusCode': 400,
