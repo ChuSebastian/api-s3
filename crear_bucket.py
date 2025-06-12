@@ -7,7 +7,7 @@ def lambda_handler(event, context):
     s3_client = boto3.client('s3')
 
     # Obtener el nombre del bucket desde el evento
-    bucket_name = event.get('nuevo-bucket')
+    bucket_name = event.get('bucket_name')
     
     if not bucket_name:
         return {
