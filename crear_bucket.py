@@ -6,8 +6,16 @@ def lambda_handler(event, context):
     """Lambda para crear un bucket S3. El nombre del bucket se recibe vía evento JSON."""
     s3_client = boto3.client('s3')
 
-    # Obtener el nombre del bucket desde el evento
-    bucket_name = event.get('bucket_name')
+    # API Gateway proxy: el body viene como un string JSON
+    try:
+        body = json.loads(event.get('body', '{}'))
+    except Exception as e:
+        return {
+            'statusCode': 400,
+            'body': json.dumps(f"Error al parsear el body: {str(e)}")
+        }
+
+    bucket_name = body.get('bucket_name')
     
     if not bucket_name:
         return {
